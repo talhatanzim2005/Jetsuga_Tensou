@@ -1,0 +1,46 @@
+[
+  {
+    "id": "sch-001",
+    "course": "CSE 4113",
+    "title": "Distributed Systems & Cloud Computing",
+    "day": "Sunday",
+    "start_time": "08:00",
+    "end_time": "09:30",
+    "room": "7A03",
+    "instructor": "Dr. Alimur Razi",
+    "section": "A"
+  },
+  {
+    "id": "sch-002",
+    "course": "CSE 4114",
+    "title": "Distributed Systems Lab",
+    "day": "Sunday",
+    "start_time": "09:30",
+    "end_time": "12:30",
+    "room": "7B02",
+    "instructor": "Lecturer Sharmin Akter",
+    "section": "A1/A2"
+  },
+  {
+    "id": "sch-003",
+    "course": "CSE 3201",
+    "title": "Software Engineering",
+    "day": "Monday",
+    "start_time": "10:00",
+    "end_time": "11:30",
+    "room": "7A05",
+    "instructor": "Prof. Hasan Sarwar",
+    "section": "B"
+  },
+  {
+    "id": "sch-004",
+    "course": "CSE 4203",
+    "title": "Artificial Intelligence & Neural Nets",
+    "day": "Tuesday",
+    "start_time": "11:30",
+    "end_time": "13:00",
+    "room": "7C01",
+    "instructor": "Dr. Tariqul Islam",
+    "section": "DWM"
+  }
+]

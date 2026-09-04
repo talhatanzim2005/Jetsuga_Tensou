@@ -1,0 +1,26 @@
+[
+  {
+    "id": "asgn-001",
+    "course": "CSE 4113",
+    "course_title": "Distributed Systems & Cloud Computing",
+    "title": "Lab Report 1: Raft Consensus Protocol",
+    "description": "Implement leader election and log replication using Go or Python.",
+    "assigned_date": "2026-09-01",
+    "deadline": "2026-09-08",
+    "submission_platform": "Google Classroom",
+    "status": "pending",
+    "marks": 20
+  },
+  {
+    "id": "asgn-002",
+    "course": "CSE 3201",
+    "course_title": "Software Engineering",
+    "title": "Project Architecture Document (ADR)",
+    "description": "Submit C4 model diagrams and 3 ADR entries for your semester project.",
+    "assigned_date": "2026-08-25",
+    "deadline": "2026-09-05",
+    "submission_platform": "Physical submission",
+    "status": "pending",
+    "marks": 15
+  }
+]

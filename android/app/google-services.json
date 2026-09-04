@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "178530774852",
+    "project_id": "carnival-hackathon-2026",
+    "storage_bucket": "carnival-hackathon-2026.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:178530774852:android:0f9cdb72b75ff2c5c57111",
+        "android_client_info": {
+          "package_name": "com.example.hackathon"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrAtJS6zQWga86iOuCssqd7SEnwQjf7w8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,110 @@
+﻿CampusOS: Architectural & Implementation Plan
+This plan establishes the architecture and execution roadmap for CampusOS, an integrated campus management platform and real-time AI assistant grounded in the Problem Statement and Schema Specifications.
+1. System Architecture & Core Requirements
+
+
+
+
+
+
+                               ┌─────────────────────────────┐
+                              │   Student / Admin Web UI    │
+                              │   (Data Manager & Chat)     │
+                              └──────────────┬──────────────┘
+                                             │ REST / SSE
+                                             ▼
+                              ┌─────────────────────────────┐
+                              │     CampusOS API Server     │
+                              │   (Validation & Routing)    │
+                              └──────┬───────────────┬──────┘
+                                     │               │
+                    Live State Sync  │               │ Tool Calling
+                                     ▼               ▼
+                      ┌─────────────────┐     ┌──────────────┐
+                      │ Persistence     │     │ Campus AI    │
+                      │ Layer (JSON /   │◄────┤ Agent        │
+                      │ SQLite Store)   │     │ (ReAct Loop) │
+                      └─────────────────┘     └──────────────┘
+
+The system is split into two co-dependent parts:
+1. The Campus Data Manager: Manages five interrelated data entities (Schedules, Rooms, Events, Announcements, Assignments) with instantaneous UI reactivity and backend persistence.
+2. The Campus AI Agent: Operates directly over the live state with zero-stale-data caching, tool execution, multi-hop reasoning, disambiguation, and safety/permission guardrails.
+2. Part 1: Campus Data Manager
+2.1 Domain Schemas & Conventions
+All records enforce stable primary keys (sch-###, room-###, evt-###, ann-###, asgn-###), 24-hour time formatting (HH:MM), ISO dates (YYYY-MM-DD), and the university calendar week (Sunday–Thursday).
+1. Class Schedules (data/schedules.json)
+   * Fields: id, course, title, day, start_time, end_time, room, instructor, section.
+   * Rules: Valid days are strictly Sunday, Monday, Tuesday, Wednesday, Thursday.
+2. Rooms & Bookings (data/rooms.json)
+   * Fields: id, room_number, type (classroom | lab | seminar), capacity, equipment (string[]), floor, status (available | unavailable), bookings (Booking[]).
+   * Booking Object: booking_id, booked_by, date, start_time, end_time, purpose.
+   * AUST Room Convention:
+      * 7A01–7A07: Classrooms (Capacity 40–50)
+      * 7B01–7B08: Computer Labs (Capacity 25–35)
+      * 7C01–7C05: Seminar Halls (Capacity 55–70)
+3. Campus Events (data/events.json)
+   * Fields: id, name, description, date, start_time, end_time, end_date, venue, organizer, capacity, registered, registrations (Registration[]), status (upcoming | ongoing | completed | cancelled | full).
+   * Registration Object: student_id, name.
+4. Announcements (data/announcements.json)
+   * Fields: id, title, body, date, priority (high | medium | low), posted_by, expires.
+   * Rules: Expired notices (expires < today) are automatically demarcated as stale in the UI.
+5. Course Assignments (data/assignments.json)
+   * Fields: id, course, course_title, title, description, assigned_date, deadline, submission_platform, status (pending | submitted | graded | late), marks.
+2.2 Core Business Logic & Conflict Resolution
+* Schedule Clash Guard: Validates that no two classes occupy the same room at overlapping hours on the same weekday.
+* Room Booking Validation: A booking request is rejected if:
+   * The room is already booked for that date/time window.
+   * A scheduled class occupies that room at that time.
+   * The requested room status is marked unavailable.
+* Event Capacity Enforcement: Prevents registrations once registered >= capacity, automatically switching event status to full.
+* Real-Time UI Synchronization: Implemented via Server-Sent Events (SSE) or optimistic state dispatch. When an administrative change or booking occurs, the UI updates immediately without requiring a browser refresh.
+3. Part 2: AI Campus Agent
+The agent is designed as a tool-augmented reasoning engine that operates as an intelligent senior student. It does not hallucinate static facts; every response is grounded in real-time system state.
+3.1 Agent Tool Interface
+
+
+
+
+
+
+TypeScript
+// Core Agent Tools
+checkRoomAvailability(date: string, startTime: string, endTime: string, type?: string, equipment?: string[]): RoomMatch[]
+bookRoom(roomNumber: string, date: string, startTime: string, endTime: string, bookedBy: string, purpose: string): BookingResult
+getSchedule(day?: string, course?: string, room?: string, instructor?: string): ScheduleItem[]
+registerForEvent(eventId: string, studentId: string, studentName: string): RegistrationResult
+getUpcomingDeadlines(daysAhead: number, course?: string): AssignmentItem[]
+getActiveAnnouncements(priority?: string): AnnouncementItem[]
+findFreeTimeSlots(studentSchedule: ScheduleItem[], targetDay: string): TimeSlot[]
+
+3.2 Agent Behavioral Guardrails
+1. Multi-Source Synthesis:
+   * Queries spanning multiple domains (e.g., "Can I use room 7B03 on Monday from 11:00 to 13:00?") combine the class schedule timetable, existing bookings, and room equipment to deliver a unified answer.
+2. Proactive Disambiguation:
+   * If a student asks to "Book a lab tomorrow for project work", the agent asks for missing required parameters (desired hours, equipment needs like projectors, and team size) rather than making assumptions.
+3. Strict Boundaries & Polite Refusal:
+   * Attempting to book during weekend hours (Friday/Saturday) is flagged.
+   * Attempting to book an already occupied room returns a refusal detailing the existing booking or class session, alongside alternative available rooms nearby.
+4. Recommended Technology Stack & Layout
+* Backend: Node.js (Express / Fastify) or Python (FastAPI).
+* Data Layer: Atomic file-backed JSON store with in-memory caching and write-locks to prevent race conditions.
+* Frontend: Modern SPA (React / Vite or clean vanilla ES6 modules with Tailwind CSS / CSS Grid) featuring:
+   * Tabbed or modular split-screen view: Data Manager (left/main) + Campus Assistant (right panel).
+   * Optimistic client-side cache synced via REST + SSE.
+* Agent Integration: Standard OpenAI/Anthropic/Gemini function-calling format with a well-defined ReAct controller.
+5. Implementation Milestones
+1. Milestone 1 — Data Storage & Seeds:
+   * Set up standard schemas for the 5 JSON files in /data.
+   * Implement data validation utilities and conflict detectors (time overlap logic).
+2. Milestone 2 — Backend API & Event Stream:
+   * Implement complete CRUD endpoints for schedules, rooms, events, announcements, and assignments.
+   * Establish SSE broadcaster (/api/events/stream) notifying connected clients on any mutation.
+3. Milestone 3 — Data Manager UI:
+   * Build five view modules (Timetable Matrix, Room Inspector, Event Board, Notice Board, Assignment Tracker).
+   * Implement responsive modal forms for add/edit/delete operations with instant feedback.
+4. Milestone 4 — AI Agent & Tool Binding:
+   * Implement tool execution handlers against the backend store.
+   * Write system prompt instructing the agent on campus conventions, multi-hop lookups, and polite rejections.
+5. Milestone 5 — End-to-End Verification:
+   * Verify that changes made in the Data Manager are immediately reflected in agent answers.
+   * Verify that actions performed by the agent (e.g., booking a room) immediately reflect on the Data Manager board.

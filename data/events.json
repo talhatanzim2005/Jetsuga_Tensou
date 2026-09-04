@@ -1,0 +1,37 @@
+[
+  {
+    "id": "evt-001",
+    "name": "CSE Carnival 8.0 Hackathon",
+    "description": "Annual flagship competitive programming & AI hackathon at AUST.",
+    "date": "2026-09-10",
+    "start_time": "09:00",
+    "end_time": "18:00",
+    "end_date": "2026-09-10",
+    "venue": "7C01",
+    "organizer": "AUST CSE Society",
+    "capacity": 50,
+    "registered": 42,
+    "registrations": [
+      {
+        "student_id": "20-40532",
+        "name": "Student User"
+      }
+    ],
+    "status": "upcoming"
+  },
+  {
+    "id": "evt-002",
+    "name": "AI Agent Workshop: ReAct Patterns",
+    "description": "Hands-on session on building tool-augmented autonomous AI agents.",
+    "date": "2026-09-15",
+    "start_time": "14:00",
+    "end_time": "16:30",
+    "end_date": "2026-09-15",
+    "venue": "7B02",
+    "organizer": "Innovation Club",
+    "capacity": 30,
+    "registered": 30,
+    "registrations": [],
+    "status": "full"
+  }
+]

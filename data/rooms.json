@@ -1,0 +1,61 @@
+[
+  {
+    "id": "room-001",
+    "room_number": "7A03",
+    "type": "classroom",
+    "capacity": 45,
+    "equipment": ["projector", "AC", "whiteboard"],
+    "floor": 7,
+    "status": "available",
+    "bookings": [
+      {
+        "booking_id": "bk-001",
+        "booked_by": "AUST Debate Club",
+        "date": "2026-09-12",
+        "start_time": "15:00",
+        "end_time": "17:00",
+        "purpose": "Inter-department Debate Practice"
+      }
+    ]
+  },
+  {
+    "id": "room-002",
+    "room_number": "7B02",
+    "type": "lab",
+    "capacity": 30,
+    "equipment": ["projector", "AC", "computers", "whiteboard"],
+    "floor": 7,
+    "status": "available",
+    "bookings": []
+  },
+  {
+    "id": "room-003",
+    "room_number": "7B06",
+    "type": "lab",
+    "capacity": 35,
+    "equipment": ["AC", "computers", "whiteboard"],
+    "floor": 7,
+    "status": "available",
+    "bookings": []
+  },
+  {
+    "id": "room-004",
+    "room_number": "7C01",
+    "type": "seminar",
+    "capacity": 65,
+    "equipment": ["projector", "AC", "sound system", "podium"],
+    "floor": 7,
+    "status": "available",
+    "bookings": []
+  },
+  {
+    "id": "room-005",
+    "room_number": "7C04",
+    "type": "seminar",
+    "capacity": 60,
+    "equipment": ["projector", "AC", "sound system"],
+    "floor": 7,
+    "status": "unavailable",
+    "bookings": []
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "ann-001",
+    "title": "Midterm Examination Schedule Released",
+    "body": "Fall 2026 midterm exams will commence from September 20th. Check your student portal for seat plans.",
+    "date": "2026-09-01",
+    "priority": "high",
+    "posted_by": "Exam Controller Office",
+    "expires": "2026-09-25"
+  },
+  {
+    "id": "ann-002",
+    "title": "Lab Maintenance Notice for 7B06",
+    "body": "Room 7B06 hardware maintenance scheduled for Saturday. No access permitted.",
+    "date": "2026-08-28",
+    "priority": "medium",
+    "posted_by": "IT Infrastructure Dept",
+    "expires": "2026-09-02"
+  }
+]
