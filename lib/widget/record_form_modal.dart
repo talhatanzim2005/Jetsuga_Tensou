@@ -254,8 +254,27 @@ class LabeledField extends StatelessWidget {
             controller: controller,
             maxLines: maxLines,
             style: AppTypography.body,
+            readOnly: isDate,
+            onTap: isDate
+                ? () async {
+                    final now = DateTime.now();
+                    final picked = await showDatePicker(
+                      context: context,
+                      initialDate: now,
+                      firstDate: DateTime(2020),
+                      lastDate: DateTime(2030),
+                    );
+                    final ctrl = controller;
+                    if (picked != null && ctrl != null) {
+                      final dd = picked.day.toString().padLeft(2, '0');
+                      final mm = picked.month.toString().padLeft(2, '0');
+                      final yyyy = picked.year.toString();
+                      ctrl.text = '$dd-$mm-$yyyy';
+                    }
+                  }
+                : null,
             decoration: InputDecoration(
-              hintText: hintText ?? label,
+              hintText: hintText ?? (isDate ? 'DD-MM-YYYY' : label),
               filled: true,
               fillColor: AppColors.tableHeaderBg,
               contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),

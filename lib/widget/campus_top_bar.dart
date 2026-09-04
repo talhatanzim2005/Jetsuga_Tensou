@@ -3,18 +3,28 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hackathon/back_end/auth_service.dart';
 import 'package:hackathon/front_end/theme.dart';
 
-/// Top bar spanning the content area with breadcrumb, search, and user avatar.
+/// Top bar spanning the content area with breadcrumb, stretched search bar, and user avatar.
 class CampusTopBar extends StatelessWidget {
-  const CampusTopBar({super.key, this.onSearchTap, this.onAiTap});
+  const CampusTopBar({
+    super.key,
+    this.searchController,
+    this.onSearchChanged,
+    this.onSearchSubmitted,
+    this.onClearSearch,
+    this.onAiTap,
+  });
 
-  final VoidCallback? onSearchTap;
+  final TextEditingController? searchController;
+  final ValueChanged<String>? onSearchChanged;
+  final ValueChanged<String>? onSearchSubmitted;
+  final VoidCallback? onClearSearch;
   final VoidCallback? onAiTap;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       height: 64,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
       decoration: const BoxDecoration(
         color: AppColors.topBarBg,
         border: Border(
@@ -25,6 +35,7 @@ class CampusTopBar extends StatelessWidget {
         children: [
           // ── Left: Breadcrumb ──
           Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Container(
                 width: 8,
@@ -35,11 +46,15 @@ class CampusTopBar extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: AppSpacing.xs),
-              Text(
-                'Northbridge University',
-                style: AppTypography.body.copyWith(
-                  color: AppColors.contentText,
-                  fontWeight: FontWeight.w500,
+              Flexible(
+                child: Text(
+                  'AHSANULLAH UNIVERSITY OF SCIENCE AND TECHNOLOGY',
+                  style: AppTypography.body.copyWith(
+                    color: AppColors.contentText,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 13,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
               Padding(
@@ -55,28 +70,87 @@ class CampusTopBar extends StatelessWidget {
                 'Fall term',
                 style: AppTypography.body.copyWith(
                   color: AppColors.contentTextMuted,
+                  fontSize: 13,
                 ),
               ),
             ],
           ),
 
-          const Spacer(),
+          const SizedBox(width: AppSpacing.md),
 
-          // ── Right: Search + AI + Avatar ──
-          IconButton(
-            onPressed: onSearchTap,
-            icon: const Icon(Icons.search_rounded, color: AppColors.contentTextMuted, size: 22),
-            tooltip: 'Search',
+          // ── Center: Stretched White Search Bar ──
+          Expanded(
+            child: Container(
+              height: 40,
+              margin: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(AppRadius.sm),
+                border: Border.all(color: AppColors.contentDivider, width: 1),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x0A000000),
+                    blurRadius: 4,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: TextField(
+                controller: searchController,
+                onChanged: onSearchChanged,
+                onSubmitted: onSearchSubmitted,
+                style: AppTypography.body.copyWith(
+                  color: AppColors.contentText,
+                  fontSize: 13,
+                ),
+                decoration: InputDecoration(
+                  hintText: 'Search campus, schedules, rooms, events...',
+                  hintStyle: AppTypography.bodySmall.copyWith(
+                    color: AppColors.contentTextMuted,
+                    fontSize: 13,
+                  ),
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 11),
+                  suffixIcon: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (searchController != null && searchController!.text.isNotEmpty)
+                        IconButton(
+                          icon: const Icon(Icons.close_rounded, size: 16, color: AppColors.contentTextMuted),
+                          onPressed: () {
+                            searchController?.clear();
+                            onClearSearch?.call();
+                            onSearchChanged?.call('');
+                          },
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                        ),
+                      const Padding(
+                        padding: EdgeInsets.only(right: 12.0, left: 4.0),
+                        child: Icon(
+                          Icons.search_rounded,
+                          color: AppColors.contentTextMuted,
+                          size: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ),
+
+          const SizedBox(width: AppSpacing.xs),
+
+          // ── Right: AI + Avatar ──
           if (onAiTap != null) ...[
-            const SizedBox(width: 4),
             IconButton(
               onPressed: onAiTap,
               icon: const Icon(Icons.smart_toy_rounded, color: AppColors.accent, size: 22),
               tooltip: 'AI Assistant',
             ),
+            const SizedBox(width: 4),
           ],
-          const SizedBox(width: AppSpacing.sm),
           _UserAvatarChip(),
         ],
       ),

@@ -144,17 +144,29 @@ class OverviewScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
-            child: Row(
-              children: [
-                Icon(Icons.today_rounded, size: 20, color: AppColors.accent),
-                const SizedBox(width: AppSpacing.xs),
-                Text(
-                  'Today\'s Schedule — $today',
-                  style: AppTypography.h6,
-                ),
-              ],
+          InkWell(
+            onTap: () => onNavigateKey?.call('schedule'),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.md)),
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              child: Row(
+                children: [
+                  Icon(Icons.today_rounded, size: 20, color: AppColors.accent),
+                  const SizedBox(width: AppSpacing.xs),
+                  Text(
+                    'Today\'s Schedule — $today',
+                    style: AppTypography.h6,
+                  ),
+                  const Spacer(),
+                  Text(
+                    'View Schedule →',
+                    style: AppTypography.bodySmall.copyWith(
+                      color: AppColors.accentDark,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           const Divider(height: 1, color: AppColors.contentDivider),
@@ -170,37 +182,40 @@ class OverviewScreen extends StatelessWidget {
             )
           else
             ...todayClasses.map((cls) {
-              return Container(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 14),
-                decoration: const BoxDecoration(
-                  border: Border(bottom: BorderSide(color: AppColors.tableRowBorder, width: 1)),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 4, height: 40,
-                      decoration: BoxDecoration(
-                        color: AppColors.accent,
-                        borderRadius: BorderRadius.circular(2),
+              return InkWell(
+                onTap: () => onNavigateKey?.call('schedule'),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 14),
+                  decoration: const BoxDecoration(
+                    border: Border(bottom: BorderSide(color: AppColors.tableRowBorder, width: 1)),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 4, height: 40,
+                        decoration: BoxDecoration(
+                          color: AppColors.accent,
+                          borderRadius: BorderRadius.circular(2),
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: AppSpacing.sm),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${cls.course} — ${cls.title}',
-                            style: AppTypography.body.copyWith(fontWeight: FontWeight.w600),
-                          ),
-                          Text(
-                            '${cls.startTime} – ${cls.endTime} · Room ${cls.room} · ${cls.instructor}',
-                            style: AppTypography.bodySmall,
-                          ),
-                        ],
+                      const SizedBox(width: AppSpacing.sm),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${cls.course} — ${cls.title}',
+                              style: AppTypography.body.copyWith(fontWeight: FontWeight.w600),
+                            ),
+                            Text(
+                              '${cls.startTime} – ${cls.endTime} · Room ${cls.room} · ${cls.instructor}',
+                              style: AppTypography.bodySmall,
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             }),
@@ -219,56 +234,71 @@ class OverviewScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(AppSpacing.md),
-            child: Row(
-              children: [
-                Icon(Icons.campaign_rounded, size: 20, color: AppColors.warning),
-                const SizedBox(width: AppSpacing.xs),
-                Text('Recent Announcements', style: AppTypography.h6),
-              ],
+          InkWell(
+            onTap: () => onNavigateKey?.call('announcements'),
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.md)),
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.md),
+              child: Row(
+                children: [
+                  Icon(Icons.campaign_rounded, size: 20, color: AppColors.warning),
+                  const SizedBox(width: AppSpacing.xs),
+                  Text('Recent Announcements', style: AppTypography.h6),
+                  const Spacer(),
+                  Text(
+                    'View All →',
+                    style: AppTypography.bodySmall.copyWith(
+                      color: AppColors.accentDark,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           const Divider(height: 1, color: AppColors.contentDivider),
           ...repo.announcements.map((ann) {
-            return Container(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 14),
-              decoration: const BoxDecoration(
-                border: Border(bottom: BorderSide(color: AppColors.tableRowBorder, width: 1)),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(top: 4),
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: ann.priority == 'high' ? AppColors.errorBg : AppColors.warningBg,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      ann.priority.toUpperCase(),
-                      style: AppTypography.caption.copyWith(
-                        color: ann.priority == 'high' ? AppColors.error : AppColors.warning,
-                        fontSize: 9,
-                        letterSpacing: 0.5,
+            return InkWell(
+              onTap: () => onNavigateKey?.call('announcements'),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 14),
+                decoration: const BoxDecoration(
+                  border: Border(bottom: BorderSide(color: AppColors.tableRowBorder, width: 1)),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(top: 4),
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: ann.priority == 'high' ? AppColors.errorBg : AppColors.warningBg,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        ann.priority.toUpperCase(),
+                        style: AppTypography.caption.copyWith(
+                          color: ann.priority == 'high' ? AppColors.error : AppColors.warning,
+                          fontSize: 9,
+                          letterSpacing: 0.5,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(ann.title, style: AppTypography.body.copyWith(fontWeight: FontWeight.w600)),
-                        Text(
-                          '${ann.postedBy} · Expires ${ann.expires}',
-                          style: AppTypography.bodySmall,
-                        ),
-                      ],
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(ann.title, style: AppTypography.body.copyWith(fontWeight: FontWeight.w600)),
+                          Text(
+                            '${ann.postedBy} · Expires ${ann.expires}',
+                            style: AppTypography.bodySmall,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           }),

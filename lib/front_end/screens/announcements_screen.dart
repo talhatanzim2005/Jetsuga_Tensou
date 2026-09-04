@@ -30,6 +30,24 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
 
   void _refresh() => setState(() {});
 
+  DateTime? _parseDate(String input) {
+    if (input.trim().isEmpty) return null;
+    if (input.contains('-')) {
+      final parts = input.split('-');
+      if (parts.length == 3) {
+        if (parts[2].length == 4) {
+          final day = int.tryParse(parts[0]);
+          final month = int.tryParse(parts[1]);
+          final year = int.tryParse(parts[2]);
+          if (day != null && month != null && year != null) {
+            return DateTime(year, month, day);
+          }
+        }
+      }
+    }
+    return DateTime.tryParse(input);
+  }
+
   @override
   Widget build(BuildContext context) {
     return CampusDataTable(
@@ -43,7 +61,7 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
         TableCol(label: 'EXPIRES', flex: 1),
       ],
       rows: _repo.announcements.map((a) {
-        final isStale = DateTime.tryParse(a.expires)?.isBefore(DateTime.now()) ?? false;
+        final isStale = _parseDate(a.expires)?.isBefore(DateTime.now()) ?? false;
         return TableRowData(
           cells: [
             // ANNOUNCEMENT column
@@ -114,7 +132,7 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
         const SizedBox(height: AppSpacing.sm),
         FormFieldRow(children: [
           LabeledField(label: 'Posted by', controller: postedByCtrl),
-          LabeledField(label: 'Expires', controller: expiresCtrl, hintText: 'YYYY-MM-DD', isDate: true),
+          LabeledField(label: 'Expires', controller: expiresCtrl, hintText: 'DD-MM-YYYY', isDate: true),
         ]),
         StatefulBuilder(
           builder: (context, setFieldState) {

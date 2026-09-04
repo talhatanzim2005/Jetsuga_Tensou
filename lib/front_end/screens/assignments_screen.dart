@@ -101,8 +101,26 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
     );
   }
 
+  DateTime? _parseDate(String input) {
+    if (input.trim().isEmpty) return null;
+    if (input.contains('-')) {
+      final parts = input.split('-');
+      if (parts.length == 3) {
+        if (parts[2].length == 4) {
+          final day = int.tryParse(parts[0]);
+          final month = int.tryParse(parts[1]);
+          final year = int.tryParse(parts[2]);
+          if (day != null && month != null && year != null) {
+            return DateTime(year, month, day);
+          }
+        }
+      }
+    }
+    return DateTime.tryParse(input);
+  }
+
   bool _isUrgent(String deadline) {
-    final d = DateTime.tryParse(deadline);
+    final d = _parseDate(deadline);
     if (d == null) return false;
     return d.difference(DateTime.now()).inDays <= 3;
   }
@@ -128,10 +146,10 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
         ]),
         FormFieldRow(children: [
           LabeledField(label: 'Assignment title', controller: titleCtrl),
-          LabeledField(label: 'Assigned date', controller: assignedCtrl, hintText: 'dd/mm/yyyy', isDate: true),
+          LabeledField(label: 'Assigned date', controller: assignedCtrl, hintText: 'DD-MM-YYYY', isDate: true),
         ]),
         FormFieldRow(children: [
-          LabeledField(label: 'Deadline', controller: deadlineCtrl, hintText: 'dd/mm/yyyy', isDate: true),
+          LabeledField(label: 'Deadline', controller: deadlineCtrl, hintText: 'DD-MM-YYYY', isDate: true),
           LabeledField(label: 'Submission platform', controller: platformCtrl),
         ]),
         FormFieldRow(children: [

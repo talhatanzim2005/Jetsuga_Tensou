@@ -101,7 +101,7 @@ class _EventsScreenState extends State<EventsScreen> {
           LabeledField(label: 'Organizer', controller: orgCtrl),
         ]),
         FormFieldRow(children: [
-          LabeledField(label: 'Date', controller: dateCtrl, hintText: 'YYYY-MM-DD', isDate: true),
+          LabeledField(label: 'Date', controller: dateCtrl, hintText: 'DD-MM-YYYY', isDate: true),
           LabeledField(label: 'Venue (room)', controller: venueCtrl),
         ]),
         FormFieldRow(children: [

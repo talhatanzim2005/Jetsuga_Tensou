@@ -37,34 +37,40 @@ class CampusSidebar extends StatelessWidget {
       child: Column(
         children: [
           // ── Logo Section ──
-          Padding(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.md, AppSpacing.lg, AppSpacing.md, AppSpacing.md,
-            ),
-            child: Row(
-              children: [
-                Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: AppColors.accent,
-                    borderRadius: BorderRadius.circular(AppRadius.sm),
-                  ),
-                  child: const Icon(
-                    Icons.school_rounded,
-                    color: AppColors.sidebarBg,
-                    size: 20,
-                  ),
+          MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: () => onItemTap('overview'),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.md, AppSpacing.lg, AppSpacing.md, AppSpacing.md,
                 ),
-                const SizedBox(width: AppSpacing.xs),
-                Text(
-                  'CampusOS',
-                  style: AppTypography.h5.copyWith(
-                    color: AppColors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        color: AppColors.accent,
+                        borderRadius: BorderRadius.circular(AppRadius.sm),
+                      ),
+                      child: const Icon(
+                        Icons.school_rounded,
+                        color: AppColors.sidebarBg,
+                        size: 20,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                    Text(
+                      'CampusOS',
+                      style: AppTypography.h5.copyWith(
+                        color: AppColors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
 

@@ -20,10 +20,12 @@ class CampusOSDashboardScreen extends StatefulWidget {
 
 class _CampusOSDashboardScreenState extends State<CampusOSDashboardScreen> {
   String _activeKey = 'overview';
+  String _searchQuery = '';
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final CampusDataRepository _repo = CampusDataRepository();
 
-  // AI Chat State
+  // Search & AI Chat State
+  final TextEditingController _searchController = TextEditingController();
   final List<Map<String, String>> _chatMessages = [
     {
       'sender': 'agent',
@@ -50,16 +52,29 @@ class _CampusOSDashboardScreenState extends State<CampusOSDashboardScreen> {
   @override
   void dispose() {
     _repo.removeListener(_onRepoChanged);
+    _searchController.dispose();
     _chatController.dispose();
     super.dispose();
   }
 
   void _onRepoChanged() => setState(() {});
 
+  void _selectTab(String key) {
+    setState(() {
+      _activeKey = key;
+      _searchQuery = '';
+      _searchController.clear();
+    });
+  }
+
   Widget _getActiveScreen() {
+    if (_searchQuery.trim().isNotEmpty) {
+      return _buildSearchResultsView(_searchQuery.trim().toLowerCase());
+    }
+
     switch (_activeKey) {
       case 'overview':
-        return OverviewScreen(onNavigateKey: (key) => setState(() => _activeKey = key));
+        return OverviewScreen(onNavigateKey: (key) => _selectTab(key));
       case 'schedule':
         return const ScheduleScreen();
       case 'rooms':
@@ -71,7 +86,7 @@ class _CampusOSDashboardScreenState extends State<CampusOSDashboardScreen> {
       case 'assignments':
         return const AssignmentsScreen();
       default:
-        return OverviewScreen(onNavigateKey: (key) => setState(() => _activeKey = key));
+        return OverviewScreen(onNavigateKey: (key) => _selectTab(key));
     }
   }
 
@@ -134,7 +149,7 @@ class _CampusOSDashboardScreenState extends State<CampusOSDashboardScreen> {
                 activeKey: _activeKey,
                 items: _navItems,
                 onItemTap: (key) {
-                  setState(() => _activeKey = key);
+                  _selectTab(key);
                   Navigator.of(context).pop(); // close drawer
                 },
               ),
@@ -153,7 +168,7 @@ class _CampusOSDashboardScreenState extends State<CampusOSDashboardScreen> {
             CampusSidebar(
               activeKey: _activeKey,
               items: _navItems,
-              onItemTap: (key) => setState(() => _activeKey = key),
+              onItemTap: (key) => _selectTab(key),
             ),
 
           // ── Main Content ──
@@ -162,7 +177,9 @@ class _CampusOSDashboardScreenState extends State<CampusOSDashboardScreen> {
               children: [
                 // Top Bar
                 CampusTopBar(
-                  onSearchTap: () {},
+                  searchController: _searchController,
+                  onSearchChanged: (q) => setState(() => _searchQuery = q),
+                  onClearSearch: () => setState(() => _searchQuery = ''),
                   onAiTap: () => _scaffoldKey.currentState?.openEndDrawer(),
                 ),
                 // Mobile hamburger bar
@@ -303,6 +320,214 @@ class _CampusOSDashboardScreenState extends State<CampusOSDashboardScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSearchResultsView(String query) {
+    final schedMatches = _repo.schedules.where((s) =>
+      s.course.toLowerCase().contains(query) ||
+      s.title.toLowerCase().contains(query) ||
+      s.instructor.toLowerCase().contains(query) ||
+      s.room.toLowerCase().contains(query) ||
+      s.day.toLowerCase().contains(query)
+    ).toList();
+
+    final roomMatches = _repo.rooms.where((r) =>
+      r.roomNumber.toLowerCase().contains(query) ||
+      r.type.toLowerCase().contains(query) ||
+      r.status.toLowerCase().contains(query) ||
+      r.equipment.any((e) => e.toLowerCase().contains(query))
+    ).toList();
+
+    final eventMatches = _repo.events.where((e) =>
+      e.name.toLowerCase().contains(query) ||
+      e.description.toLowerCase().contains(query) ||
+      e.venue.toLowerCase().contains(query) ||
+      e.organizer.toLowerCase().contains(query)
+    ).toList();
+
+    final annMatches = _repo.announcements.where((a) =>
+      a.title.toLowerCase().contains(query) ||
+      a.body.toLowerCase().contains(query) ||
+      a.postedBy.toLowerCase().contains(query) ||
+      a.priority.toLowerCase().contains(query)
+    ).toList();
+
+    final asgnMatches = _repo.assignments.where((a) =>
+      a.course.toLowerCase().contains(query) ||
+      a.title.toLowerCase().contains(query) ||
+      a.description.toLowerCase().contains(query) ||
+      a.submissionPlatform.toLowerCase().contains(query)
+    ).toList();
+
+    final totalCount = schedMatches.length + roomMatches.length + eventMatches.length + annMatches.length + asgnMatches.length;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.search_rounded, color: AppColors.accent, size: 24),
+              const SizedBox(width: AppSpacing.xs),
+              Text(
+                'Search Results for "$_searchQuery"',
+                style: AppTypography.h4,
+              ),
+              const SizedBox(width: AppSpacing.xs),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: AppColors.accentBg,
+                  borderRadius: BorderRadius.circular(AppRadius.full),
+                ),
+                child: Text(
+                  '$totalCount matches',
+                  style: AppTypography.caption.copyWith(color: AppColors.accentDark, fontWeight: FontWeight.bold),
+                ),
+              ),
+              const Spacer(),
+              TextButton.icon(
+                onPressed: () => setState(() {
+                  _searchQuery = '';
+                  _searchController.clear();
+                }),
+                icon: const Icon(Icons.close_rounded, size: 18),
+                label: const Text('Clear Search'),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          if (totalCount == 0)
+            Container(
+              padding: const EdgeInsets.all(AppSpacing.xl),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: AppColors.contentSurface,
+                borderRadius: BorderRadius.circular(AppRadius.md),
+                border: Border.all(color: AppColors.contentDivider),
+              ),
+              child: Column(
+                children: [
+                  const Icon(Icons.search_off_rounded, size: 48, color: AppColors.contentTextMuted),
+                  const SizedBox(height: AppSpacing.sm),
+                  Text(
+                    'No matching records found',
+                    style: AppTypography.h5,
+                  ),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    'Try searching for a course code (CSE 4113), room (7A03), event, or deadline.',
+                    style: AppTypography.body.copyWith(color: AppColors.contentTextMuted),
+                  ),
+                ],
+              ),
+            )
+          else ...[
+            if (schedMatches.isNotEmpty) ...[
+              _buildSearchCategoryHeader('Schedules', Icons.calendar_today_rounded, schedMatches.length, 'schedule'),
+              ...schedMatches.map((s) => _buildSearchResultCard(
+                title: '${s.course} — ${s.title}',
+                subtitle: '${s.day} ${s.startTime}-${s.endTime} · Room ${s.room} · ${s.instructor}',
+                badge: s.section,
+                categoryKey: 'schedule',
+              )),
+              const SizedBox(height: AppSpacing.md),
+            ],
+            if (roomMatches.isNotEmpty) ...[
+              _buildSearchCategoryHeader('Rooms', Icons.meeting_room_rounded, roomMatches.length, 'rooms'),
+              ...roomMatches.map((r) => _buildSearchResultCard(
+                title: 'Room ${r.roomNumber} (${r.type.toUpperCase()})',
+                subtitle: 'Floor ${r.floor} · Capacity: ${r.capacity} · Equipment: ${r.equipment.join(', ')}',
+                badge: r.status.toUpperCase(),
+                categoryKey: 'rooms',
+              )),
+              const SizedBox(height: AppSpacing.md),
+            ],
+            if (eventMatches.isNotEmpty) ...[
+              _buildSearchCategoryHeader('Events', Icons.groups_rounded, eventMatches.length, 'events'),
+              ...eventMatches.map((e) => _buildSearchResultCard(
+                title: e.name,
+                subtitle: '${e.date} (${e.startTime}-${e.endTime}) · Venue: ${e.venue} · ${e.organizer}',
+                badge: '${e.registered}/${e.capacity}',
+                categoryKey: 'events',
+              )),
+              const SizedBox(height: AppSpacing.md),
+            ],
+            if (annMatches.isNotEmpty) ...[
+              _buildSearchCategoryHeader('Announcements', Icons.campaign_rounded, annMatches.length, 'announcements'),
+              ...annMatches.map((a) => _buildSearchResultCard(
+                title: a.title,
+                subtitle: '${a.postedBy} · ${a.body}',
+                badge: a.priority.toUpperCase(),
+                categoryKey: 'announcements',
+              )),
+              const SizedBox(height: AppSpacing.md),
+            ],
+            if (asgnMatches.isNotEmpty) ...[
+              _buildSearchCategoryHeader('Assignments', Icons.assignment_rounded, asgnMatches.length, 'assignments'),
+              ...asgnMatches.map((a) => _buildSearchResultCard(
+                title: '${a.course}: ${a.title}',
+                subtitle: 'Deadline: ${a.deadline} · Platform: ${a.submissionPlatform} · ${a.description}',
+                badge: '${a.marks} Marks',
+                categoryKey: 'assignments',
+              )),
+              const SizedBox(height: AppSpacing.md),
+            ],
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSearchCategoryHeader(String title, IconData icon, int count, String key) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.xs, top: AppSpacing.xs),
+      child: Row(
+        children: [
+          Icon(icon, size: 18, color: AppColors.accent),
+          const SizedBox(width: AppSpacing.xs),
+          Text(title, style: AppTypography.h6),
+          const SizedBox(width: AppSpacing.xs),
+          Text('($count)', style: AppTypography.bodySmall.copyWith(color: AppColors.contentTextMuted)),
+          const Spacer(),
+          TextButton(
+            onPressed: () => _selectTab(key),
+            child: const Text('View All →', style: TextStyle(fontSize: 12)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSearchResultCard({
+    required String title,
+    required String subtitle,
+    required String badge,
+    required String categoryKey,
+  }) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: AppSpacing.xs),
+      elevation: 0,
+      color: AppColors.contentSurface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppRadius.sm),
+        side: const BorderSide(color: AppColors.contentDivider),
+      ),
+      child: ListTile(
+        onTap: () => _selectTab(categoryKey),
+        title: Text(title, style: AppTypography.body.copyWith(fontWeight: FontWeight.w600)),
+        subtitle: Text(subtitle, style: AppTypography.bodySmall, maxLines: 2, overflow: TextOverflow.ellipsis),
+        trailing: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            color: AppColors.accentBg,
+            borderRadius: BorderRadius.circular(AppRadius.sm),
+          ),
+          child: Text(badge, style: AppTypography.caption.copyWith(color: AppColors.accentDark, fontWeight: FontWeight.bold)),
+        ),
       ),
     );
   }
