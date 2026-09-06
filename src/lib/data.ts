@@ -8,6 +8,7 @@ import type {
   Notice,
   QuickTask,
   RoutineItem,
+  WeekEvent,
 } from "./types"
 import { to12h, toMinutes } from "./utils"
 
@@ -193,6 +194,13 @@ export const NOTICES: Notice[] = [
     relevant: true,
     category: "Examination",
     unread: true,
+    ago: "2 hours ago",
+    analysis:
+      "Your CSE 2201 Midterm has been rescheduled to Sep 20, 11:30 AM.",
+    impact:
+      "This creates a 30-minute overlap with your scheduled Faculty Meeting.",
+    link: "View original notice & attachments",
+    actionLabel: "Resolve Conflict",
   },
   {
     id: "ann-001",
@@ -227,6 +235,11 @@ export const NOTICES: Notice[] = [
     relevant: true,
     category: "Academic",
     unread: true,
+    ago: "Yesterday",
+    analysis:
+      "The semester extension affects 2 assignment deadlines you planned for the final week.",
+    link: "Open Academic Calendar portal",
+    actionLabel: "Review Routine Impacts",
   },
   {
     id: "ann-005",
@@ -238,7 +251,17 @@ export const NOTICES: Notice[] = [
     expires: "2026-10-15",
     relevant: true,
     category: "General",
+    ago: "Sep 4",
+    analysis:
+      "No direct schedule impact. Deadline for submission is November 1st.",
   },
+]
+
+/** Raw departmental circulars surfaced in the AUST Intel right rail. */
+export const DEPT_CIRCULARS = [
+  { id: "dc-1", title: "CSE Dept meeting minutes - August", date: "Sep 2", by: "Dept Head" },
+  { id: "dc-2", title: "Lab equipment maintenance schedule", date: "Aug 28", by: "IT Support" },
+  { id: "dc-3", title: "New TA assignment list for Fall 2024", date: "Aug 25", by: "Dept Office" },
 ]
 
 /** Faculty quick tasks, seeded to match the dashboard design. */
@@ -346,3 +369,35 @@ export function detectConflicts(items: RoutineItem[]): Conflict[] {
 }
 
 export const PRIMARY_CONFLICT = detectConflicts(buildRoutine())[0]
+
+/**
+ * Dr. Razi's weekly routine for the My Routine timetable. The academic week
+ * runs Sunday–Thursday. The Monday Faculty Meeting carries the active
+ * conflict flag surfaced by the revised-exam notice.
+ */
+export const WEEK_DAYS = [
+  { dow: "Sunday", short: "Sun", date: "Sep 6" },
+  { dow: "Monday", short: "Mon", date: "Sep 7" },
+  { dow: "Tuesday", short: "Tue", date: "Sep 8" },
+  { dow: "Wednesday", short: "Wed", date: "Sep 9" },
+  { dow: "Thursday", short: "Thu", date: "Sep 10" },
+]
+
+export const WEEK_EVENTS: WeekEvent[] = [
+  // Sunday
+  { id: "w-sun-1", day: "Sunday", start: "09:00", end: "10:20", title: "CSE 2201", subtitle: "Data Structures", room: "Room 5B", kind: "class" },
+  { id: "w-sun-2", day: "Sunday", start: "11:00", end: "12:30", title: "CSE 2203", subtitle: "Algorithms", room: "Room 4A", kind: "class" },
+  { id: "w-sun-3", day: "Sunday", start: "14:00", end: "16:30", title: "Research Block", subtitle: "ML Paper Draft", room: "2:00 PM - 4:30 PM", kind: "research" },
+  // Monday
+  { id: "w-mon-1", day: "Monday", start: "11:00", end: "12:00", title: "Faculty Mtg", subtitle: "Monthly syllabus review", kind: "meeting", conflict: true },
+  { id: "w-mon-2", day: "Monday", start: "13:00", end: "15:00", title: "CSE 2202 Lab", subtitle: "Data Structures Lab (Section A)", room: "Software Lab 2", kind: "lab" },
+  // Tuesday
+  { id: "w-tue-1", day: "Tuesday", start: "08:00", end: "10:00", title: "CSE 2204 Lab", subtitle: "Algorithms Lab (Section B)", room: "Hardware Lab", kind: "lab" },
+  { id: "w-tue-2", day: "Tuesday", start: "14:00", end: "15:30", title: "Office Hours", subtitle: "Student Consult", room: "Room 301", kind: "office" },
+  // Wednesday
+  { id: "w-wed-1", day: "Wednesday", start: "11:00", end: "12:30", title: "CSE 2201", subtitle: "Data Structures", room: "Room 5B", kind: "class" },
+  { id: "w-wed-2", day: "Wednesday", start: "14:00", end: "15:30", title: "CSE 2203", subtitle: "Algorithms", room: "Room 4A", kind: "class" },
+  // Thursday
+  { id: "w-thu-1", day: "Thursday", start: "09:00", end: "10:30", title: "Office Hours", subtitle: "Open Door", kind: "office" },
+  { id: "w-thu-2", day: "Thursday", start: "11:00", end: "12:30", title: "Dept Meeting", subtitle: "Curriculum", room: "Conf Room 1", kind: "meeting" },
+]

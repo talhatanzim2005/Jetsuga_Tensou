@@ -54,6 +54,16 @@ export interface Notice {
   relevant: boolean
   category: string
   unread?: boolean
+  /** AUST Intel: relative time label, e.g. "2 hours ago". */
+  ago?: string
+  /** AUST Intel: the AI's read on how this notice affects the faculty member. */
+  analysis?: string
+  /** AUST Intel: a follow-up impact line highlighted inside the analysis. */
+  impact?: string
+  /** AUST Intel: link to the source document. */
+  link?: string
+  /** AUST Intel: primary action label, when the notice needs one. */
+  actionLabel?: string
 }
 
 export interface QuickTask {
@@ -88,4 +98,24 @@ export interface Conflict {
   overlapStart: string
   overlapEnd: string
   overlapMinutes: number
+}
+
+export type WeekEventKind =
+  | "class"
+  | "lab"
+  | "meeting"
+  | "office"
+  | "research"
+
+/** A block on the weekly routine timetable. */
+export interface WeekEvent {
+  id: string
+  day: string
+  start: string
+  end: string
+  title: string
+  subtitle?: string
+  room?: string
+  kind: WeekEventKind
+  conflict?: boolean
 }
