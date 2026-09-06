@@ -4,7 +4,7 @@ import { AppShell } from "@/components/app-shell"
 import { AttentionBanner } from "@/components/attention-banner"
 import { OverviewCards } from "@/components/overview-cards"
 import { ProjectAnalytics } from "@/components/project-analytics"
-import { ProjectProgress } from "@/components/project-progress"
+import { QuickTasks } from "@/components/quick-tasks"
 import { RemindersCard } from "@/components/reminders-card"
 import { useConflict } from "@/lib/use-conflict"
 
@@ -31,7 +31,7 @@ function Dashboard() {
         </div>
         <div className="flex flex-col gap-6">
           <RemindersCard />
-          <ProjectProgress />
+          <QuickTasks />
         </div>
       </div>
     </div>
