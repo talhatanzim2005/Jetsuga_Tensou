@@ -2,8 +2,8 @@
 
 import { AppShell } from "@/components/app-shell"
 import { AttentionBanner } from "@/components/attention-banner"
+import { IntelAlerts } from "@/components/intel-alerts"
 import { OverviewCards } from "@/components/overview-cards"
-import { ProjectAnalytics } from "@/components/project-analytics"
 import { QuickTasks } from "@/components/quick-tasks"
 import { RemindersCard } from "@/components/reminders-card"
 import { useConflict } from "@/lib/use-conflict"
@@ -27,7 +27,7 @@ function Dashboard() {
 
       <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-3">
         <div className="lg:col-span-2">
-          <ProjectAnalytics />
+          <IntelAlerts resolved={resolved} />
         </div>
         <div className="flex flex-col gap-6">
           <RemindersCard />
