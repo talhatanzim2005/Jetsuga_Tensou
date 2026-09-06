@@ -1,32 +1,35 @@
 "use client"
 
 import { useState } from "react"
-import { Check, Plus } from "lucide-react"
+import { Check, Pencil, Plus, Trash2 } from "lucide-react"
 import { Panel } from "@/components/primitives"
-import { QUICK_TASKS } from "@/lib/data"
-import type { QuickTask } from "@/lib/types"
+import { useQuickTasks } from "@/lib/use-quick-tasks"
 import { cn } from "@/lib/utils"
 
 export function QuickTasks() {
-  const [tasks, setTasks] = useState<QuickTask[]>(QUICK_TASKS)
+  const { tasks, addTask, updateTask, deleteTask } = useQuickTasks()
   const [adding, setAdding] = useState(false)
   const [draft, setDraft] = useState("")
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editDraft, setEditDraft] = useState("")
 
-  function toggle(id: string) {
-    setTasks((ts) =>
-      ts.map((t) => (t.id === id ? { ...t, done: !t.done } : t)),
-    )
-  }
-
-  function addTask() {
+  function submitNew() {
     const title = draft.trim()
     if (!title) return
-    setTasks((ts) => [
-      { id: `qt-${Date.now()}`, title, done: false },
-      ...ts,
-    ])
+    addTask(title)
     setDraft("")
     setAdding(false)
+  }
+
+  function startEdit(id: string, title: string) {
+    setEditingId(id)
+    setEditDraft(title)
+  }
+
+  function submitEdit() {
+    const title = editDraft.trim()
+    if (editingId && title) updateTask(editingId, { title })
+    setEditingId(null)
   }
 
   return (
@@ -47,7 +50,7 @@ export function QuickTasks() {
         <form
           onSubmit={(e) => {
             e.preventDefault()
-            addTask()
+            submitNew()
           }}
           className="mb-2"
         >
@@ -66,31 +69,72 @@ export function QuickTasks() {
 
       <ul className="space-y-0.5">
         {tasks.map((t) => (
-          <li key={t.id}>
-            <button
-              type="button"
-              onClick={() => toggle(t.id)}
-              className="flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left transition-colors hover:bg-muted/60"
-            >
-              <span
+          <li key={t.id} className="group">
+            <div className="flex w-full items-center gap-3 rounded-lg px-2 py-2 transition-colors hover:bg-muted/60">
+              <button
+                type="button"
+                onClick={() => updateTask(t.id, { done: !t.done })}
+                aria-label={t.done ? `Mark "${t.title}" as not done` : `Mark "${t.title}" as done`}
                 className={cn(
                   "flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded border transition-colors",
                   t.done
                     ? "border-primary bg-primary text-primary-foreground"
-                    : "border-input bg-card",
+                    : "border-input bg-card hover:border-primary/60",
                 )}
               >
                 {t.done ? <Check className="h-3 w-3" /> : null}
+              </button>
+
+              {editingId === t.id ? (
+                <input
+                  autoFocus
+                  value={editDraft}
+                  onChange={(e) => setEditDraft(e.target.value)}
+                  onBlur={submitEdit}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") submitEdit()
+                    if (e.key === "Escape") setEditingId(null)
+                  }}
+                  aria-label={`Edit task "${t.title}"`}
+                  className="h-7 min-w-0 flex-1 rounded-md border border-ring bg-background px-2 text-sm outline-none ring-2 ring-ring/20"
+                />
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => updateTask(t.id, { done: !t.done })}
+                  className="min-w-0 flex-1 text-left"
+                >
+                  <span
+                    className={cn(
+                      "block truncate text-sm leading-snug",
+                      t.done && "text-muted-foreground line-through",
+                    )}
+                    title={t.title}
+                  >
+                    {t.title}
+                  </span>
+                </button>
+              )}
+
+              <span className="ml-auto flex shrink-0 items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
+                <button
+                  type="button"
+                  onClick={() => startEdit(t.id, t.title)}
+                  aria-label={`Edit "${t.title}"`}
+                  className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+                >
+                  <Pencil className="h-3.5 w-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => deleteTask(t.id)}
+                  aria-label={`Delete "${t.title}"`}
+                  className="flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-danger/10 hover:text-danger"
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </button>
               </span>
-              <span
-                className={cn(
-                  "text-sm leading-snug",
-                  t.done && "text-muted-foreground line-through",
-                )}
-              >
-                {t.title}
-              </span>
-            </button>
+            </div>
           </li>
         ))}
       </ul>

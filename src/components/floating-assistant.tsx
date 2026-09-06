@@ -6,8 +6,10 @@ import { Badge } from "@/components/primitives"
 import {
   answer,
   SUGGESTED_QUESTIONS,
+  tryTaskCommand,
   type AssistantReply,
 } from "@/lib/assistant"
+import { useQuickTasks } from "@/lib/use-quick-tasks"
 
 interface Message {
   id: number
@@ -28,12 +30,13 @@ let counter = 0
 const nextId = () => ++counter
 
 export function FloatingAssistant() {
+  const taskActions = useQuickTasks()
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>([
     {
       id: nextId(),
       role: "assistant",
-      text: "Hi Dr. Razi — I'm FacultyOS. I've reviewed this week's university information against your routine. Ask me anything, or tap a question below.",
+      text: "Hi Dr. Razi — I'm FacultyOS. I've reviewed this week's university information against your routine. Ask me anything, or tell me to add, edit, complete, or delete your quick tasks.",
     },
   ])
   const [input, setInput] = useState("")
@@ -63,7 +66,7 @@ export function FloatingAssistant() {
     setMessages((m) => [...m, userMsg, thinkingMsg])
 
     window.setTimeout(() => {
-      const reply = answer(text)
+      const reply = tryTaskCommand(text, taskActions) ?? answer(text)
       setMessages((m) =>
         m.map((msg) =>
           msg.id === thinkingMsg.id
@@ -177,7 +180,7 @@ export function FloatingAssistant() {
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask about your schedule…"
+            placeholder="Ask me, or say “add task …”"
             className="h-10 flex-1 rounded-full border border-input bg-background px-4 text-sm outline-none placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/20"
           />
           <button
