@@ -1,13 +1,15 @@
 import type {
+  AgendaItem,
   ClassSession,
   Conflict,
   Deadline,
   Exam,
   Meeting,
   Notice,
+  QuickTask,
   RoutineItem,
 } from "./types"
-import { toMinutes } from "./utils"
+import { to12h, toMinutes } from "./utils"
 
 /**
  * The faculty member the workspace is personalized for.
@@ -33,24 +35,24 @@ export const DEMO_DATE = "2026-09-06"
  */
 export const SCHEDULES: ClassSession[] = [
   {
-    id: "sch-001",
-    course: "CSE 4113",
-    title: "Distributed Systems & Cloud Computing",
-    day: "Sunday",
-    start_time: "08:00",
-    end_time: "09:30",
-    room: "7A03",
-    instructor: "Dr. Alimur Razi",
-    section: "A",
-  },
-  {
     id: "sch-005",
     course: "CSE 2201",
     title: "Data Structures",
     day: "Sunday",
-    start_time: "11:00",
-    end_time: "12:30",
-    room: "7A01",
+    start_time: "09:00",
+    end_time: "10:20",
+    room: "5B",
+    instructor: "Dr. Alimur Razi",
+    section: "B",
+  },
+  {
+    id: "sch-008",
+    course: "CSE 2201",
+    title: "Data Structures Lab",
+    day: "Sunday",
+    start_time: "15:00",
+    end_time: "16:20",
+    room: "7B02",
     instructor: "Dr. Alimur Razi",
     section: "B",
   },
@@ -132,6 +134,15 @@ export const MEETINGS: Meeting[] = [
     room: "7C05",
     organizer: "Office of the Registrar",
   },
+  {
+    id: "mtg-003",
+    title: "Faculty Meeting",
+    date: "2026-09-06",
+    start_time: "11:30",
+    end_time: "12:15",
+    room: "7C05",
+    organizer: "Head of Department",
+  },
 ]
 
 /** Faculty-facing deadlines derived from data/assignments.json. */
@@ -181,6 +192,7 @@ export const NOTICES: Notice[] = [
     expires: "2026-09-21",
     relevant: true,
     category: "Examination",
+    unread: true,
   },
   {
     id: "ann-001",
@@ -204,12 +216,70 @@ export const NOTICES: Notice[] = [
     relevant: false,
     category: "Facilities",
   },
+  {
+    id: "ann-004",
+    title: "Revised AUST Academic Calendar",
+    body: "Fall semester dates have been updated. This affects 2 of your planned assignment deadlines.",
+    date: "2026-09-04",
+    priority: "medium",
+    posted_by: "Office of the Registrar",
+    expires: "2026-09-30",
+    relevant: true,
+    category: "Academic",
+    unread: true,
+  },
+  {
+    id: "ann-005",
+    title: "Research Grant Applications Open",
+    body: "University grants for Q4 are now accepting submissions. No direct action required for your current schedule.",
+    date: "2026-09-03",
+    priority: "low",
+    posted_by: "Research & Extension Office",
+    expires: "2026-10-15",
+    relevant: true,
+    category: "General",
+  },
+]
+
+/** Faculty quick tasks, seeded to match the dashboard design. */
+export const QUICK_TASKS: QuickTask[] = [
+  { id: "qt-1", title: "Submit CSE 2201 Grades", done: false },
+  { id: "qt-2", title: "Review Lab Reports", done: false },
+  { id: "qt-3", title: "Grade final project submissions (CSE 2203)", done: false },
+  { id: "qt-4", title: "Set Midterm paper questions (CSE 2201)", done: false },
+  { id: "qt-5", title: "Review PhD student's draft paper", done: false },
+  { id: "qt-6", title: "Organize group photo for graduating class", done: false },
+  { id: "qt-7", title: "Appraise faculty promotion candidates", done: false },
+  { id: "qt-8", title: "Schedule make-up class (CSE 2201)", done: false },
+  { id: "qt-9", title: "Prepare Meeting Notes", done: true },
 ]
 
 export function facultyClassesFor(day: string): ClassSession[] {
   return SCHEDULES.filter(
     (s) => s.day === day && s.instructor === FACULTY.name,
   ).sort((a, b) => toMinutes(a.start_time) - toMinutes(b.start_time))
+}
+
+/** Today's merged agenda: classes/labs plus any meetings dated today. */
+export function todayAgenda(): AgendaItem[] {
+  const classes = facultyClassesFor(DEMO_TODAY_DOW).map((s) => ({
+    id: s.id,
+    time: to12h(s.start_time),
+    title: s.title.endsWith("Lab") ? `${s.course} Lab` : s.course,
+    detail: `Room ${s.room}`,
+    kind: "class" as const,
+    sort: toMinutes(s.start_time),
+  }))
+  const meetings = MEETINGS.filter((m) => m.date === DEMO_DATE).map((m) => ({
+    id: m.id,
+    time: to12h(m.start_time),
+    title: m.title,
+    kind: "meeting" as const,
+    sort: toMinutes(m.start_time),
+  }))
+  return [...classes, ...meetings]
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ sort: _sort, ...item }) => item)
 }
 
 /** All routine items unified so conflicts can be computed across types. */

@@ -1,15 +1,14 @@
 "use client"
 
 import { useState } from "react"
-import { AiAssistant } from "@/components/ai-assistant"
 import { AttentionBanner } from "@/components/attention-banner"
 import { ConflictFlow } from "@/components/conflict-flow"
 import { DashboardHeader } from "@/components/dashboard-header"
-import { NoticesPanel } from "@/components/notices-panel"
+import { FloatingAssistant } from "@/components/floating-assistant"
+import { IntelAlerts } from "@/components/intel-alerts"
+import { OverviewCards } from "@/components/overview-cards"
+import { QuickTasks } from "@/components/quick-tasks"
 import { Sidebar } from "@/components/sidebar"
-import { StatCards } from "@/components/stat-cards"
-import { TodaySchedule } from "@/components/today-schedule"
-import { Deadlines, UpcomingExams } from "@/components/upcoming"
 
 export default function Page() {
   const [flowOpen, setFlowOpen] = useState(false)
@@ -19,7 +18,7 @@ export default function Page() {
 
   return (
     <div className="flex min-h-screen bg-background text-foreground">
-      <Sidebar />
+      <Sidebar conflicts={resolved ? 0 : 1} />
 
       <div className="flex min-w-0 flex-1 flex-col">
         <DashboardHeader />
@@ -35,35 +34,18 @@ export default function Page() {
 
           <AttentionBanner resolved={resolved} onReviewConflict={openFlow} />
 
-          <StatCards />
+          <OverviewCards resolved={resolved} onReviewConflict={openFlow} />
 
           <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-3">
-            <div className="space-y-6 lg:col-span-2">
-              <TodaySchedule />
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <UpcomingExams onReviewConflict={openFlow} />
-                <Deadlines />
-              </div>
+            <div className="lg:col-span-2">
+              <IntelAlerts resolved={resolved} onReviewConflict={openFlow} />
             </div>
-
-            <div className="space-y-6">
-              <AiAssistant />
-              <NoticesPanel onReviewConflict={openFlow} />
-            </div>
+            <QuickTasks />
           </div>
-
-          <footer className="border-t border-border pt-5 pb-2 text-center">
-            <p className="text-sm font-medium">
-              Faculty shouldn&apos;t have to manage information. Information
-              should work for faculty.
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              FacultyOS — from scattered information to intelligent academic
-              decisions.
-            </p>
-          </footer>
         </main>
       </div>
+
+      <FloatingAssistant />
 
       <ConflictFlow
         open={flowOpen}

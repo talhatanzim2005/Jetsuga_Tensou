@@ -53,6 +53,21 @@ export interface Notice {
   expires: string
   relevant: boolean
   category: string
+  unread?: boolean
+}
+
+export interface QuickTask {
+  id: string
+  title: string
+  done: boolean
+}
+
+export interface AgendaItem {
+  id: string
+  time: string
+  title: string
+  detail?: string
+  kind: "class" | "meeting"
 }
 
 export interface RoutineItem {

@@ -1,9 +1,13 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { Send, Sparkles } from "lucide-react"
+import { GraduationCap, Send, X } from "lucide-react"
 import { Badge } from "@/components/primitives"
-import { answer, SUGGESTED_QUESTIONS, type AssistantReply } from "@/lib/assistant"
+import {
+  answer,
+  SUGGESTED_QUESTIONS,
+  type AssistantReply,
+} from "@/lib/assistant"
 
 interface Message {
   id: number
@@ -23,12 +27,13 @@ const toneMap = {
 let counter = 0
 const nextId = () => ++counter
 
-export function AiAssistant() {
+export function FloatingAssistant() {
+  const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState<Message[]>([
     {
       id: nextId(),
       role: "assistant",
-      text: "Hi Dr. Razi — I've reviewed this week's university information against your routine. Ask me anything, or tap a question below.",
+      text: "Hi Dr. Razi — I'm FacultyOS. I've reviewed this week's university information against your routine. Ask me anything, or tap a question below.",
     },
   ])
   const [input, setInput] = useState("")
@@ -40,7 +45,7 @@ export function AiAssistant() {
       top: scrollRef.current.scrollHeight,
       behavior: "smooth",
     })
-  }, [messages])
+  }, [messages, open])
 
   function ask(question: string) {
     const text = question.trim()
@@ -70,32 +75,51 @@ export function AiAssistant() {
     }, 650)
   }
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    ask(input)
+  if (!open) {
+    return (
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        aria-label="Open FacultyOS assistant"
+        className="fos-scale-in fixed bottom-5 right-5 z-40 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 transition-transform hover:scale-105 active:scale-95"
+      >
+        <GraduationCap className="h-6 w-6" />
+      </button>
+    )
   }
 
   return (
-    <div className="fos-card flex h-[32rem] flex-col rounded-2xl border border-border bg-card">
-      <div className="flex items-center gap-2.5 border-b border-border px-5 py-4">
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
-          <Sparkles className="h-4 w-4" />
+    <div className="fos-scale-in fixed bottom-5 right-5 z-40 flex h-[34rem] w-[min(24rem,calc(100vw-2.5rem))] flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-2xl">
+      <div className="flex items-center gap-2.5 border-b border-border px-4 py-3.5">
+        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground">
+          <GraduationCap className="h-5 w-5" />
         </div>
         <div className="leading-tight">
-          <h2 className="text-sm font-semibold tracking-tight">
-            AI Academic Assistant
-          </h2>
+          <h2 className="text-sm font-semibold tracking-tight">FacultyOS</h2>
           <p className="text-[11px] text-muted-foreground">
-            Answers from your actual schedule
+            AI Academic Assistant
           </p>
         </div>
+        <button
+          type="button"
+          onClick={() => setOpen(false)}
+          aria-label="Close assistant"
+          className="ml-auto flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+        >
+          <X className="h-4 w-4" />
+        </button>
       </div>
 
-      <div ref={scrollRef} className="fos-scroll flex-1 space-y-4 overflow-y-auto px-5 py-4">
+      <div
+        ref={scrollRef}
+        className="fos-scroll flex-1 space-y-4 overflow-y-auto px-4 py-4"
+      >
         {messages.map((m) => (
           <div
             key={m.id}
-            className={m.role === "user" ? "flex justify-end" : "flex justify-start"}
+            className={
+              m.role === "user" ? "flex justify-end" : "flex justify-start"
+            }
           >
             <div
               className={
@@ -129,7 +153,7 @@ export function AiAssistant() {
         ))}
       </div>
 
-      <div className="border-t border-border px-5 py-3">
+      <div className="border-t border-border px-4 py-3">
         <div className="mb-2.5 flex flex-wrap gap-1.5">
           {SUGGESTED_QUESTIONS.slice(0, 3).map((q) => (
             <button
@@ -143,7 +167,13 @@ export function AiAssistant() {
             </button>
           ))}
         </div>
-        <form onSubmit={handleSubmit} className="flex items-center gap-2">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            ask(input)
+          }}
+          className="flex items-center gap-2"
+        >
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
