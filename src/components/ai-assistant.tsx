@@ -76,9 +76,9 @@ export function AiAssistant() {
   }
 
   return (
-    <div className="flex h-[32rem] flex-col rounded-xl border border-border bg-card">
-      <div className="flex items-center gap-2 border-b border-border px-5 py-4">
-        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/15 text-primary">
+    <div className="fos-card flex h-[32rem] flex-col rounded-2xl border border-border bg-card">
+      <div className="flex items-center gap-2.5 border-b border-border px-5 py-4">
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
           <Sparkles className="h-4 w-4" />
         </div>
         <div className="leading-tight">
@@ -101,7 +101,7 @@ export function AiAssistant() {
               className={
                 m.role === "user"
                   ? "max-w-[85%] rounded-2xl rounded-br-sm bg-primary px-3.5 py-2.5 text-sm text-primary-foreground"
-                  : "max-w-[90%] rounded-2xl rounded-bl-sm bg-accent px-3.5 py-2.5 text-sm text-accent-foreground"
+                  : "max-w-[90%] rounded-2xl rounded-bl-sm bg-muted px-3.5 py-2.5 text-sm text-foreground"
               }
             >
               {m.thinking ? (
@@ -137,7 +137,7 @@ export function AiAssistant() {
               type="button"
               onClick={() => ask(q)}
               disabled={busy}
-              className="rounded-full border border-border bg-background/60 px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground disabled:opacity-50"
+              className="rounded-full border border-border bg-card px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:border-primary/50 hover:text-primary disabled:opacity-50"
             >
               {q}
             </button>
@@ -148,13 +148,13 @@ export function AiAssistant() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask about your schedule…"
-            className="h-10 flex-1 rounded-lg border border-input bg-background/60 px-3 text-sm outline-none placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/30"
+            className="h-10 flex-1 rounded-full border border-input bg-background px-4 text-sm outline-none placeholder:text-muted-foreground focus:border-ring focus:ring-2 focus:ring-ring/20"
           />
           <button
             type="submit"
             disabled={busy || !input.trim()}
             aria-label="Send"
-            className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-opacity disabled:opacity-40"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-primary-foreground transition-opacity disabled:opacity-40"
           >
             <Send className="h-4 w-4" />
           </button>

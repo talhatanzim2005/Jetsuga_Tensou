@@ -16,8 +16,8 @@ export function AttentionBanner({
 
   if (resolved) {
     return (
-      <div className="fos-fade-up flex items-center gap-4 rounded-xl border border-success/30 bg-success/10 p-5">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-success/20 text-success">
+      <div className="fos-fade-up fos-card flex items-center gap-4 rounded-2xl border border-success/25 bg-success/5 p-5">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-success/15 text-success">
           <CheckCircle2 className="h-5 w-5" />
         </div>
         <div className="min-w-0">
@@ -34,9 +34,9 @@ export function AttentionBanner({
   }
 
   return (
-    <div className="fos-fade-up relative overflow-hidden rounded-xl border border-danger/30 bg-danger/10 p-5">
+    <div className="fos-fade-up fos-card relative overflow-hidden rounded-2xl border border-danger/25 bg-danger/5 p-5">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-        <div className="fos-pulse flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-danger/20 text-danger">
+        <div className="fos-pulse flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-danger/15 text-danger">
           <TriangleAlert className="h-5 w-5" />
         </div>
         <div className="min-w-0 flex-1">
@@ -60,7 +60,7 @@ export function AttentionBanner({
         <button
           type="button"
           onClick={onReviewConflict}
-          className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-danger px-4 py-2.5 text-sm font-semibold text-danger-foreground transition-transform hover:scale-[1.02] active:scale-[0.99]"
+          className="inline-flex shrink-0 items-center gap-2 rounded-full bg-danger px-5 py-2.5 text-sm font-semibold text-danger-foreground shadow-md shadow-danger/25 transition-transform hover:scale-[1.02] active:scale-[0.99]"
         >
           Review conflict
           <ArrowRight className="h-4 w-4" />

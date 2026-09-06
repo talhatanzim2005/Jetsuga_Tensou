@@ -25,7 +25,7 @@ export function TodaySchedule() {
             return (
               <li
                 key={c.id}
-                className="flex gap-4 rounded-lg border border-border bg-background/40 p-3.5"
+                className="flex gap-4 rounded-xl border border-border bg-muted/40 p-3.5"
               >
                 <div className="flex w-16 shrink-0 flex-col items-center justify-center border-r border-border pr-3 text-center">
                   <span className="font-mono text-sm font-semibold">

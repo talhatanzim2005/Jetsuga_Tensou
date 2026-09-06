@@ -35,37 +35,37 @@
 :root {
   --radius: 0.75rem;
 
-  /* Dark academic console — the app is dark-first. */
-  --background: oklch(0.16 0.014 250);
-  --foreground: oklch(0.97 0.004 250);
+  /* Tasko light theme — warm off-white canvas, white cards, emerald actions. */
+  --background: oklch(0.962 0.006 95);
+  --foreground: oklch(0.25 0.012 90);
 
-  --card: oklch(0.2 0.016 250);
-  --card-foreground: oklch(0.97 0.004 250);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.25 0.012 90);
 
-  --popover: oklch(0.22 0.018 250);
-  --popover-foreground: oklch(0.97 0.004 250);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.25 0.012 90);
 
-  --muted: oklch(0.26 0.017 250);
-  --muted-foreground: oklch(0.68 0.014 250);
+  --muted: oklch(0.945 0.006 95);
+  --muted-foreground: oklch(0.52 0.012 90);
 
-  --border: oklch(0.3 0.018 250);
-  --input: oklch(0.3 0.018 250);
-  --ring: oklch(0.62 0.16 255);
+  --border: oklch(0.91 0.006 95);
+  --input: oklch(0.91 0.006 95);
+  --ring: oklch(0.47 0.105 155);
 
-  --primary: oklch(0.64 0.16 255);
-  --primary-foreground: oklch(0.16 0.014 250);
+  --primary: oklch(0.47 0.105 155);
+  --primary-foreground: oklch(0.98 0.005 155);
 
-  --accent: oklch(0.28 0.03 255);
-  --accent-foreground: oklch(0.97 0.004 250);
+  --accent: oklch(0.94 0.025 155);
+  --accent-foreground: oklch(0.42 0.09 155);
 
-  --danger: oklch(0.64 0.2 22);
-  --danger-foreground: oklch(0.98 0.01 22);
+  --danger: oklch(0.56 0.2 27);
+  --danger-foreground: oklch(0.98 0.005 27);
 
-  --warning: oklch(0.79 0.15 78);
-  --warning-foreground: oklch(0.2 0.03 78);
+  --warning: oklch(0.6 0.13 60);
+  --warning-foreground: oklch(0.98 0.01 90);
 
-  --success: oklch(0.7 0.15 158);
-  --success-foreground: oklch(0.16 0.02 158);
+  --success: oklch(0.58 0.13 152);
+  --success-foreground: oklch(0.98 0.005 155);
 }
 
 * {
@@ -122,6 +122,13 @@ body {
 
 .fos-pulse {
   animation: fos-pulse-ring 2s ease-out infinite;
+}
+
+/* soft elevated card, Tasko-style */
+.fos-card {
+  box-shadow:
+    0 1px 2px 0 rgb(30 30 24 / 0.05),
+    0 12px 32px -16px rgb(30 30 24 / 0.12);
 }
 
 /* thin custom scrollbars inside panels */

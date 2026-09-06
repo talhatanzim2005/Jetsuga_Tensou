@@ -27,9 +27,9 @@ export function NoticesPanel({
           return (
             <li
               key={n.id}
-              className={`rounded-lg border p-3.5 ${
+              className={`rounded-xl border p-3.5 ${
                 n.relevant
-                  ? "border-border bg-background/40"
+                  ? "border-border bg-muted/40"
                   : "border-dashed border-border bg-transparent opacity-60"
               }`}
             >

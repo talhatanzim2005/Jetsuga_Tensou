@@ -74,19 +74,19 @@ export function ConflictFlow({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-background/70 p-0 backdrop-blur-sm sm:items-center sm:p-4">
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-foreground/40 p-0 backdrop-blur-sm sm:items-center sm:p-4">
       <button
         type="button"
         aria-label="Close"
         onClick={onClose}
         className="absolute inset-0 h-full w-full cursor-default"
       />
-      <div className="fos-scale-in relative flex max-h-[92vh] w-full max-w-lg flex-col overflow-hidden rounded-t-2xl border border-border bg-popover sm:rounded-2xl">
+      <div className="fos-scale-in relative flex max-h-[92vh] w-full max-w-lg flex-col overflow-hidden rounded-t-2xl border border-border bg-popover shadow-2xl sm:rounded-2xl">
         {/* header + stepper */}
         <div className="border-b border-border px-5 py-4">
           <div className="mb-3 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="flex h-6 w-6 items-center justify-center rounded-md bg-primary/15 text-primary">
+              <span className="flex h-6 w-6 items-center justify-center rounded-md bg-accent text-accent-foreground">
                 <Radar className="h-3.5 w-3.5" />
               </span>
               <h2 className="text-sm font-semibold tracking-tight">
@@ -184,7 +184,7 @@ export function ConflictFlow({
             <button
               type="button"
               onClick={finish}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-success px-4 py-2 text-sm font-semibold text-success-foreground transition-transform hover:scale-[1.02] active:scale-[0.99]"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition-transform hover:scale-[1.02] active:scale-[0.99]"
             >
               <Check className="h-4 w-4" />
               Confirm &amp; update calendar
@@ -204,7 +204,7 @@ function StepDetected({ notice }: { notice: (typeof NOTICES)[number] }) {
         title="New information detected"
         body="FacultyOS picked up a new notice from the university and flagged it as relevant to you."
       />
-      <div className="rounded-lg border border-danger/30 bg-danger/10 p-4">
+      <div className="rounded-xl border border-danger/25 bg-danger/5 p-4">
         <div className="mb-2 flex items-center justify-between gap-2">
           <Badge tone="danger">Important · {notice.category}</Badge>
           <span className="font-mono text-[11px] text-muted-foreground">
@@ -248,7 +248,7 @@ function StepUnderstood({
         <span className="text-sm font-medium">{course}</span>
       </div>
       <div className="grid grid-cols-2 gap-3">
-        <div className="rounded-lg border border-border bg-background/40 p-3">
+        <div className="rounded-xl border border-border bg-muted/50 p-3">
           <p className="mb-1 text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
             Previous
           </p>
@@ -259,7 +259,7 @@ function StepUnderstood({
             {to12h(ORIGINAL_EXAM_TIME.start_time)}
           </p>
         </div>
-        <div className="rounded-lg border border-primary/40 bg-primary/10 p-3">
+        <div className="rounded-xl border border-primary/30 bg-accent p-3">
           <p className="mb-1 text-[10px] font-medium uppercase tracking-wide text-primary">
             New
           </p>
@@ -306,7 +306,7 @@ function StepConflict(props: {
         tone="danger"
       />
 
-      <div className="rounded-lg border border-border bg-background/40 p-4">
+      <div className="rounded-xl border border-border bg-muted/40 p-4">
         <div className="mb-3 flex items-center justify-between">
           <span className="text-xs font-medium text-muted-foreground">
             {formatDate(props.date)}
@@ -336,7 +336,7 @@ function StepConflict(props: {
         {/* overlap marker */}
         <div className="relative mt-3 h-6">
           <div
-            className="absolute top-0 flex h-6 items-center justify-center rounded bg-danger/25"
+            className="absolute top-0 flex h-6 items-center justify-center rounded border border-danger/30 bg-danger/15"
             style={{
               left: `${pct(props.overlapStart)}%`,
               width: `${width(props.overlapStart, props.overlapEnd)}%`,
@@ -388,12 +388,12 @@ function TimelineRow({
           {time}
         </span>
       </div>
-      <div className="relative h-6 rounded bg-muted/60">
+      <div className="relative h-6 rounded bg-muted">
         <div
           className={`absolute top-0 flex h-6 items-center rounded px-2 text-[10px] font-medium ${
             tone === "exam"
-              ? "bg-danger/70 text-danger-foreground"
-              : "bg-primary/70 text-primary-foreground"
+              ? "bg-danger text-danger-foreground"
+              : "bg-primary text-primary-foreground"
           }`}
           style={{ left: `${left}%`, width: `${w}%` }}
         >
@@ -427,10 +427,10 @@ function StepAction({
               key={opt.id}
               type="button"
               onClick={() => setChoice(opt.id)}
-              className={`flex w-full items-center gap-3 rounded-lg border p-3.5 text-left transition-colors ${
+              className={`flex w-full items-center gap-3 rounded-xl border p-3.5 text-left transition-colors ${
                 selected
-                  ? "border-primary bg-primary/10"
-                  : "border-border bg-background/40 hover:border-primary/40"
+                  ? "border-primary bg-accent"
+                  : "border-border bg-card hover:border-primary/40"
               }`}
             >
               <span
@@ -472,10 +472,10 @@ function Intro({
 }) {
   const toneClass =
     tone === "danger"
-      ? "bg-danger/15 text-danger"
+      ? "bg-danger/10 text-danger"
       : tone === "success"
-        ? "bg-success/15 text-success"
-        : "bg-primary/15 text-primary"
+        ? "bg-success/10 text-success"
+        : "bg-accent text-accent-foreground"
   return (
     <div className="flex items-start gap-3">
       <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${toneClass}`}>

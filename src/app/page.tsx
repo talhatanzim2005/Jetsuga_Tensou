@@ -25,6 +25,14 @@ export default function Page() {
         <DashboardHeader />
 
         <main className="mx-auto w-full max-w-[1400px] flex-1 space-y-6 px-5 py-6 md:px-8">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Good morning, Dr. Razi — here&apos;s what matters in your academic
+              day.
+            </p>
+          </div>
+
           <AttentionBanner resolved={resolved} onReviewConflict={openFlow} />
 
           <StatCards />

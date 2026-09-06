@@ -24,7 +24,7 @@ export function UpcomingExams({
           return (
             <li
               key={e.id}
-              className="rounded-lg border border-border bg-background/40 p-3.5"
+              className="rounded-xl border border-border bg-muted/40 p-3.5"
             >
               <div className="mb-1.5 flex items-center justify-between gap-2">
                 <CourseTag code={e.course} />
@@ -85,7 +85,7 @@ export function Deadlines() {
         {sorted.map((d) => (
           <li
             key={d.id}
-            className="flex items-start gap-3 rounded-lg border border-border bg-background/40 p-3.5"
+            className="flex items-start gap-3 rounded-xl border border-border bg-muted/40 p-3.5"
           >
             <div className="min-w-0 flex-1">
               <div className="mb-1 flex items-center gap-2">

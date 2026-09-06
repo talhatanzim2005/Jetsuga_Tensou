@@ -11,7 +11,7 @@ export function Panel({
   return (
     <section
       className={cn(
-        "rounded-xl border border-border bg-card p-5",
+        "fos-card rounded-2xl border border-border bg-card p-5",
         className,
       )}
     >
@@ -32,8 +32,8 @@ export function PanelHeader({
   return (
     <div className="mb-4 flex items-center justify-between gap-3">
       <div className="flex items-center gap-2">
-        {icon ? <span className="text-muted-foreground">{icon}</span> : null}
-        <h2 className="text-sm font-semibold tracking-tight text-foreground">
+        {icon ? <span className="text-primary">{icon}</span> : null}
+        <h2 className="text-base font-semibold tracking-tight text-foreground">
           {title}
         </h2>
       </div>
@@ -51,11 +51,11 @@ type BadgeTone =
   | "primary"
 
 const toneClasses: Record<BadgeTone, string> = {
-  info: "bg-primary/12 text-primary border-primary/25",
+  info: "bg-accent text-accent-foreground border-transparent",
   primary: "bg-primary text-primary-foreground border-transparent",
-  warning: "bg-warning/15 text-warning border-warning/30",
-  danger: "bg-danger/15 text-danger border-danger/30",
-  success: "bg-success/15 text-success border-success/30",
+  warning: "bg-warning/10 text-warning border-warning/25",
+  danger: "bg-danger/10 text-danger border-danger/25",
+  success: "bg-success/10 text-success border-success/25",
   neutral: "bg-muted text-muted-foreground border-border",
 }
 
@@ -83,7 +83,7 @@ export function Badge({
 
 export function CourseTag({ code }: { code: string }) {
   return (
-    <span className="rounded-md bg-accent px-1.5 py-0.5 font-mono text-xs font-medium text-accent-foreground">
+    <span className="rounded-md bg-accent px-1.5 py-0.5 font-mono text-[11px] font-semibold text-accent-foreground">
       {code}
     </span>
   )
