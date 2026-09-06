@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { CheckCircle2, Sparkles } from "lucide-react"
 import { Badge, Panel } from "@/components/primitives"
 import { PRIMARY_CONFLICT } from "@/lib/data"
@@ -17,13 +18,7 @@ function CategoryBadge({
   )
 }
 
-export function IntelAlerts({
-  resolved,
-  onReviewConflict,
-}: {
-  resolved: boolean
-  onReviewConflict: () => void
-}) {
+export function IntelAlerts({ resolved }: { resolved: boolean }) {
   return (
     <Panel>
       <div className="mb-2 flex items-center justify-between gap-3">
@@ -33,12 +28,12 @@ export function IntelAlerts({
             AUST Intelligence &amp; Personal Alerts
           </h2>
         </div>
-        <button
-          type="button"
+        <Link
+          href="/intel"
           className="text-sm font-medium text-primary hover:underline"
         >
           View All
-        </button>
+        </Link>
       </div>
 
       <div className="divide-y divide-border">
@@ -63,20 +58,12 @@ export function IntelAlerts({
               </p>
             ) : (
               <div className="mt-3 flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={onReviewConflict}
-                  className="rounded-lg border border-border bg-card px-3.5 py-2 text-xs font-semibold transition-colors hover:border-primary/50 hover:text-primary"
-                >
-                  View Impact
-                </button>
-                <button
-                  type="button"
-                  onClick={onReviewConflict}
+                <Link
+                  href="/conflicts"
                   className="rounded-lg bg-primary px-3.5 py-2 text-xs font-semibold text-primary-foreground shadow-sm transition-transform hover:scale-[1.02] active:scale-[0.99]"
                 >
-                  Reschedule Meeting
-                </button>
+                  View Details
+                </Link>
               </div>
             )}
           </div>
