@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { ArrowUpRight, CheckCircle2, FileText } from "lucide-react"
 import { EXAMS, NOTICES, PRIMARY_CONFLICT, todayAgenda } from "@/lib/data"
 import { cn } from "@/lib/utils"
@@ -13,13 +14,7 @@ function examKind(title: string) {
   return title.split("— ")[1] ?? "Exam"
 }
 
-export function OverviewCards({
-  resolved,
-  onReviewConflict,
-}: {
-  resolved: boolean
-  onReviewConflict: () => void
-}) {
+export function OverviewCards({ resolved }: { resolved: boolean }) {
   const agenda = todayAgenda()
   const unread = NOTICES.filter((n) => n.unread)
   const exams = [...EXAMS].sort((a, b) => a.date.localeCompare(b.date))
@@ -148,10 +143,9 @@ export function OverviewCards({
           </p>
         </div>
       ) : (
-        <button
-          type="button"
-          onClick={onReviewConflict}
-          className="fos-card rounded-2xl border border-danger/25 bg-danger/5 p-5 text-left transition-transform hover:scale-[1.01]"
+        <Link
+          href="/conflicts"
+          className="fos-card block rounded-2xl border border-danger/25 bg-danger/5 p-5 text-left transition-transform hover:scale-[1.01]"
         >
           <div className="flex items-start justify-between gap-2">
             <p className="text-sm font-medium text-danger">
@@ -171,7 +165,7 @@ export function OverviewCards({
             Overlap between {PRIMARY_CONFLICT.b.title} &amp; CSE 2201 Midterm
             on {shortDate(PRIMARY_CONFLICT.date)}.
           </p>
-        </button>
+        </Link>
       )}
     </div>
   )

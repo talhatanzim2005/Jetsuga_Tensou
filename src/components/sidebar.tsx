@@ -15,7 +15,7 @@ const NAV = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/" },
   { label: "My Routine", icon: CalendarDays, href: "/routine" },
   { label: "AUST Intel", icon: Megaphone, href: "/intel" },
-  { label: "Conflicts & Alerts", icon: TriangleAlert, href: "/#conflicts" },
+  { label: "Conflicts & Alerts", icon: TriangleAlert, href: "/conflicts" },
 ]
 
 export function Sidebar({ conflicts = 1 }: { conflicts?: number }) {

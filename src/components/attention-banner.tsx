@@ -1,16 +1,11 @@
 "use client"
 
+import Link from "next/link"
 import { ArrowRight, CheckCircle2, TriangleAlert } from "lucide-react"
 import { PRIMARY_CONFLICT } from "@/lib/data"
 import { formatDate, to12h } from "@/lib/utils"
 
-export function AttentionBanner({
-  resolved,
-  onReviewConflict,
-}: {
-  resolved: boolean
-  onReviewConflict: () => void
-}) {
+export function AttentionBanner({ resolved }: { resolved: boolean }) {
   const c = PRIMARY_CONFLICT
   if (!c) return null
 
@@ -57,14 +52,13 @@ export function AttentionBanner({
             by {c.overlapMinutes} minutes.
           </p>
         </div>
-        <button
-          type="button"
-          onClick={onReviewConflict}
+        <Link
+          href="/conflicts"
           className="inline-flex shrink-0 items-center gap-2 rounded-full bg-danger px-5 py-2.5 text-sm font-semibold text-danger-foreground shadow-md shadow-danger/25 transition-transform hover:scale-[1.02] active:scale-[0.99]"
         >
-          Review conflict
+          View details
           <ArrowRight className="h-4 w-4" />
-        </button>
+        </Link>
       </div>
     </div>
   )
